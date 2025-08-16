@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Southern Lanka Sale - Matara | Vehicle Management System</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    <!-- Login Modal -->
+    <div id="loginModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <div class="login-container">
+                <h2>Admin Login</h2>
+                <form id="loginForm">
+                    <div class="form-group">
+                        <label for="username">Username:</label>
+                        <input type="text" id="username" name="username" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="password">Password:</label>
+                        <input type="password" id="password" name="password" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Login</button>
+                </form>
+                <div id="loginMessage" class="message"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <div class="logo">
+                <h1><i class="fas fa-car"></i> Southern Lanka Sale</h1>
+                <p>Matara</p>
+            </div>
+            <nav class="nav" id="mainNav" style="display: none;">
+                <ul>
+                    <li><a href="#" onclick="showPage('dashboard')" class="active">Dashboard</a></li>
+                    <li><a href="#" onclick="showPage('vehicles')">Vehicles</a></li>
+                    <li><a href="#" onclick="showPage('add-vehicle')">Add Vehicle</a></li>
+                    <li><a href="#" onclick="showPage('about')">About Us</a></li>
+                    <li><a href="#" onclick="showPage('contact')">Contact</a></li>
+                    <li><a href="#" onclick="logout()">Logout</a></li>
+                </ul>
+            </nav>
+            <div class="login-btn" id="loginBtn">
+                <button onclick="openLoginModal()">Admin Login</button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Welcome Page (Before Login) -->
+        <div id="welcomePage" class="page active">
+            <div class="hero-section">
+                <div class="container">
+                    <h1>Welcome to Southern Lanka Sale</h1>
+                    <h2>Premium Vehicle Sales - Matara</h2>
+                    <p>Your trusted partner for quality vehicles in the Southern Province</p>
+                    <button onclick="openLoginModal()" class="btn btn-primary btn-large">
+                        <i class="fas fa-sign-in-alt"></i> Admin Access
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Dashboard Page -->
+        <div id="dashboardPage" class="page">
+            <div class="container">
+                <h1>Admin Dashboard</h1>
+                <div class="dashboard-stats">
+                    <div class="stat-card">
+                        <i class="fas fa-car"></i>
+                        <h3 id="totalVehicles">0</h3>
+                        <p>Total Vehicles</p>
+                    </div>
+                    <div class="stat-card">
+                        <i class="fas fa-chart-line"></i>
+                        <h3 id="totalSales">0</h3>
+                        <p>Total Sales</p>
+                    </div>
+                    <div class="stat-card">
+                        <i class="fas fa-dollar-sign"></i>
+                        <h3 id="totalRevenue">RS.0</h3>
+                        <p>Total Revenue</p>
+                    </div>
+                    <div class="stat-card">
+                        <i class="fas fa-calendar-month"></i>
+                        <h3 id="monthlySales">0</h3>
+                        <p>This Month</p>
+                    </div>
+                </div>
+                <div class="dashboard-charts">
+                    <div class="chart-container">
+                        <h3>Sales Analytics</h3>
+                        <canvas id="salesChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Vehicles Page -->
+        <div id="vehiclesPage" class="page">
+            <div class="container">
+                <div class="page-header">
+                    <h1>Vehicle Inventory</h1>
+                    <button onclick="showPage('add-vehicle')" class="btn btn-primary">
+                        <i class="fas fa-plus"></i> Add New Vehicle
+                    </button>
+                </div>
+                <div class="vehicles-grid" id="vehiclesGrid">
+                    <!-- Vehicles will be loaded here -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Add Vehicle Page -->
+        <div id="add-vehiclePage" class="page">
+            <div class="container">
+                <h1>Add New Vehicle</h1>
+                <form id="vehicleForm" class="vehicle-form">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="vehicleModel">Model:</label>
+                            <input type="text" id="vehicleModel" name="model" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="vehicleType">Type:</label>
+                            <select id="vehicleType" name="type" required>
+                                <option value="">Select Type</option>
+                                <option value="sedan">Car</option>
+                                <option value="suv">SUV</option>
+                                <option value="hatchback">Hatchback</option>
+                                <option value="coupe">Coupe</option>
+                                <option value="truck">Truck</option>
+                                <option value="van">Van</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="vehicleTyre">Tyre Size:</label>
+                            <input type="text" id="vehicleTyre" name="tyre" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="vehicleFuel">Fuel Type:</label>
+                            <select id="vehicleFuel" name="fuel" required>
+                                <option value="">Select Fuel Type</option>
+                                <option value="petrol">Petrol</option>
+                                <option value="diesel">Diesel</option>
+                                <option value="hybrid">Hybrid</option>
+                                <option value="electric">Electric</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="vehicleEngine">Engine:</label>
+                            <input type="text" id="vehicleEngine" name="engine" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="vehiclePrice">Price (Rs.):</label>
+                            <input type="number" id="vehiclePrice" name="price" required min="0" step="0.01">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="vehicleDescription">Description:</label>
+                        <textarea id="vehicleDescription" name="description" rows="4"></textarea>
+                    </div>
+                    <div class="form-actions">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-save"></i> Save Vehicle
+                        </button>
+                        <button type="button" onclick="resetForm()" class="btn btn-secondary">
+                            <i class="fas fa-refresh"></i> Reset
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- About Page -->
+        <div id="aboutPage" class="page">
+            <div class="container">
+                <h1>About Southern Lanka Sale</h1>
+                <div class="about-content">
+                    <div class="about-text">
+                        <h2>Your Trusted Vehicle Partner in Matara</h2>
+                        <p>Southern Lanka Sale has been serving the Matara community for over a decade, providing quality vehicles and exceptional customer service. We specialize in both new and pre-owned vehicles, ensuring that every customer finds the perfect match for their needs and budget.</p>
+                        
+                        <h3>Our Mission</h3>
+                        <p>To provide reliable, affordable, and quality vehicles while maintaining the highest standards of customer service and satisfaction.</p>
+                        
+                        <h3>Why Choose Us?</h3>
+                        <ul>
+                            <li>Extensive inventory of quality vehicles</li>
+                            <li>Competitive pricing and flexible payment options</li>
+                            <li>Professional and experienced staff</li>
+                            <li>Comprehensive after-sales service</li>
+                            <li>Located in the heart of Matara</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Contact Page -->
+        <div id="contactPage" class="page">
+            <div class="container">
+                <h1>Contact Us</h1>
+                <div class="contact-content">
+                    <div class="contact-info">
+                        <div class="contact-item">
+                            <i class="fas fa-map-marker-alt"></i>
+                            <div>
+                                <h3>Address</h3>
+                                <p>Main road,Madiha ,  Matara<br>Southern Province, Sri Lanka</p>
+                            </div>
+                        </div>
+                        <div class="contact-item">
+                            <i class="fas fa-phone"></i>
+                            <div>
+                                <h3>Phone</h3>
+                                <p>+94 41 222 3333</p>
+                            </div>
+                        </div>
+                        <div class="contact-item">
+                            <i class="fas fa-envelope"></i>
+                            <div>
+                                <h3>Email</h3>
+                                <p>info@southernlankasale.lk</p>
+                            </div>
+                        </div>
+                        <div class="contact-item">
+                            <i class="fas fa-clock"></i>
+                            <div>
+                                <h3>Business Hours</h3>
+                                <p>Monday - Saturday: 8:00 AM - 6:00 PM<br>Sunday: 9:00 AM - 4:00 PM</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Vehicle Details Modal -->
+    <div id="vehicleModal" class="modal">
+        <div class="modal-content modal-large">
+            <span class="close" onclick="closeVehicleModal()">&times;</span>
+            <div id="vehicleDetails">
+                <!-- Vehicle details will be loaded here -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Edit Vehicle Modal -->
+    <div id="editVehicleModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeEditModal()">&times;</span>
+            <div class="edit-container">
+                <h2>Edit Vehicle</h2>
+                <form id="editVehicleForm">
+                    <input type="hidden" id="editVehicleId">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="editModel">Model:</label>
+                            <input type="text" id="editModel" name="model" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="editType">Type:</label>
+                            <select id="editType" name="type" required>
+                                <option value="sedan">Sedan</option>
+                                <option value="suv">SUV</option>
+                                <option value="hatchback">Hatchback</option>
+                                <option value="coupe">Coupe</option>
+                                <option value="truck">Truck</option>
+                                <option value="van">Van</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="editTyre">Tyre Size:</label>
+                            <input type="text" id="editTyre" name="tyre" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="editFuel">Fuel Type:</label>
+                            <select id="editFuel" name="fuel" required>
+                                <option value="petrol">Petrol</option>
+                                <option value="diesel">Diesel</option>
+                                <option value="hybrid">Hybrid</option>
+                                <option value="electric">Electric</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="editEngine">Engine:</label>
+                            <input type="text" id="editEngine" name="engine" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="editPrice">Price (Rs.):</label>
+                            <input type="number" id="editPrice" name="price" required min="0" step="0.01">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="editDescription">Description:</label>
+                        <textarea id="editDescription" name="description" rows="4"></textarea>
+                    </div>
+                    <div class="form-actions">
+                        <button type="submit" class="btn btn-primary">Update Vehicle</button>
+                        <button type="button" onclick="closeEditModal()" class="btn btn-secondary">Cancel</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; 2025 Southern Lanka Sale - Matara. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="js/app.js"></script>
+</body>
+</html>
+
